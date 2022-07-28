@@ -16,12 +16,14 @@ class Api::V1::CartsController < ApplicationController
 
   # POST /api/v1/carts
   def create
-    @api_v1_cart = Api::V1::Cart.new(api_v1_cart_params)
 
-    if @api_v1_cart.save
-      render json: @api_v1_cart, status: :created, location: @api_v1_cart
+    @api_v1_carts = Api::V1::Cart.new(api_v1_cart_params)
+    @api_v1_carts.user_id = current_user.id
+
+    if @api_v1_carts.save
+      render json: @api_v1_carts, status: :created, location: @api_v1_carts
     else
-      render json: @api_v1_cart.errors, status: :unprocessable_entity
+      render json: @api_v1_carts.errors, status: :unprocessable_entity
     end
   end
 
@@ -47,6 +49,6 @@ class Api::V1::CartsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def api_v1_cart_params
-      params.require(:api_v1_cart).permit(:quantity, :user_id, :api_v1_item_id)
+      params.require(:api_v1_cart).permit(:quantity, :api_v1_item_id)
     end
 end

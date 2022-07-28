@@ -16,12 +16,12 @@ ActiveRecord::Schema[7.0].define(version: 2022_07_27_125657) do
 
   create_table "api_v1_carts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.integer "quantity"
-    t.uuid "users_id", null: false
-    t.uuid "api_v1_items_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["api_v1_items_id"], name: "index_api_v1_carts_on_api_v1_items_id"
-    t.index ["users_id"], name: "index_api_v1_carts_on_users_id"
+    t.uuid "user_id", null: false
+    t.uuid "api_v1_item_id", null: false
+    t.index ["api_v1_item_id"], name: "index_api_v1_carts_on_api_v1_item_id"
+    t.index ["user_id"], name: "index_api_v1_carts_on_user_id"
   end
 
   create_table "api_v1_items", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -52,12 +52,10 @@ ActiveRecord::Schema[7.0].define(version: 2022_07_27_125657) do
     t.string "address"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.uuid "api_v1_carts_id"
-    t.index ["api_v1_carts_id"], name: "index_users_on_api_v1_carts_id"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
-  add_foreign_key "api_v1_carts", "api_v1_items", column: "api_v1_items_id"
-  add_foreign_key "api_v1_carts", "users", column: "users_id"
+  add_foreign_key "api_v1_carts", "api_v1_items"
+  add_foreign_key "api_v1_carts", "users"
 end
